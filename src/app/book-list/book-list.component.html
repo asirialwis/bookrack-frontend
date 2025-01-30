@@ -1,0 +1,122 @@
+<div class="container">
+    
+    <button (click)="openAddBookModal()">
+      Add Book
+      <img src="../../assets/plus.png" alt="Plus Icon" class="plus-icon" />
+    </button>
+    
+      <table class="book-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>ISBN</th>
+            <th>Publication Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let book of books; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ book.title }}</td>
+            <td>{{ book.author }}</td>
+            <td>{{ book.isbn }}</td>
+            <td>{{ book.publicationDate | date: 'mediumDate' }}</td>
+            <td>
+              <!-- <button (click)="viewBook(book.id)">View</button> -->
+              <button (click)="editBook(book)"style="margin-right:10px;" class="edit-btn">Edit</button>
+              <button (click)="deleteBook(book.id)"class="delete-btn">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    
+      <!-- Edit Popup Modal -->
+      <div *ngIf="editingBook" class="modal">
+        <div class="modal-content">
+          <div class="modal-content">
+            <div class="modal-header" style="display: flex; align-items: center; justify-content: space-between;">
+              <h3 style="margin: 0;">Edit Book Details</h3>
+              <img src="../../assets/books2.png" alt="Book Icon" class="modal-icon" style="height: 60px; margin-right: 20px;" />
+            </div>
+          </div>
+          <div class="model-inputs">
+          <label>
+            Title:
+            <input [(ngModel)]="editingBook.title" />
+          </label>
+          <label>
+            Author:
+            <input [(ngModel)]="editingBook.author" />
+          </label>
+          <label>
+            ISBN:
+            <input [(ngModel)]="editingBook.isbn" />
+          </label>
+          <label>
+            Publication Date:
+            <input [(ngModel)]="editingBook.publicationDate" type="date" />
+          </label>
+          </div>
+          <div class="form-actions">
+            <button (click)="saveBook()">Save</button>
+            <button (click)="cancelEdit()">Cancel</button>
+          </div>
+        </div>
+        <div class="modal-overlay" (click)="cancelEdit()"></div>
+      </div>
+  
+  
+   <!-- Add Book Modal -->
+  <div *ngIf="showAddBookModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Add New Book</h3>
+        <img src="../../assets/books.png" alt="Book Icon" class="modal-icon" />
+      </div>
+      <form #bookForm="ngForm" (ngSubmit)="addBook()">
+        <div class="model-inputs">
+          <label>
+            Title:
+            <input [(ngModel)]="newBook.title" name="title" required minlength="3" #title="ngModel" />
+            <div *ngIf="title.invalid && title.touched" class="error-message">
+              Title is required and must be at least 3 characters long.
+            </div>
+          </label>
+  
+          <label>
+            Author:
+            <input [(ngModel)]="newBook.author" name="author" required minlength="3" #author="ngModel" />
+            <div *ngIf="author.invalid && author.touched" class="error-message">
+              Author is required and must be at least 3 characters long.
+            </div>
+          </label>
+  
+          <label>
+            ISBN:
+            <input [(ngModel)]="newBook.isbn" name="isbn" required pattern="^[0-9]{13}$" #isbn="ngModel" />
+            <div *ngIf="isbn.invalid && isbn.touched" class="error-message">
+              ISBN is required and must be exactly 13 digits.
+            </div>
+          </label>
+  
+          <label>
+            Publication Date:
+            <input [(ngModel)]="newBook.publicationDate" name="publicationDate" type="date" required #publicationDate="ngModel" />
+            <div *ngIf="publicationDate.invalid && publicationDate.touched" class="error-message">
+              Publication Date is required.
+            </div>
+          </label>
+        </div>
+        <div class="form-actions">
+          <button type="submit" [disabled]="bookForm.invalid">Add</button>
+          <button type="button" (click)="closeAddBookModal()">Cancel</button>
+        </div>
+      </form>
+    </div>
+    <div class="modal-overlay" (click)="closeAddBookModal()"></div>
+  </div>
+  
+    </div>
+    
